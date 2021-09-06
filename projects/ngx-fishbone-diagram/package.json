@@ -1,0 +1,19 @@
+{
+  "name": "ngx-fishbone-diagram",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^12.1.0",
+    "@angular/core": "^12.1.0",
+    "d3": "^7.0.1",
+    "d3-force": "^3.0.0",
+    "d3-scale": "^4.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.2.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^3.5.45",
+    "@types/d3-force": "^3.0.3",
+    "@types/d3-scale": "^4.0.1"
+  }
+}

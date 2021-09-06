@@ -1,0 +1,56 @@
+.d3-container {
+    margin: 0 auto;
+}
+
+::ng-deep .node {
+    cursor: pointer;
+}
+
+::ng-deep text.label-0 {
+    font-size: 2em;
+}
+
+::ng-deep text.label-1 {
+    font-size: 1.5em;
+    fill: #111;
+}
+
+::ng-deep text.label-2 {
+    font-size: 1em;
+    fill: #444;
+}
+
+::ng-deep text.label-3 {
+    font-size: .9em;
+    fill: #888;
+}
+
+::ng-deep text.label-4 {
+    font-size: .8em;
+    fill: #aaa;
+}
+
+::ng-deep .link-0 {
+    stroke: #000;
+    stroke-width: 2px
+}
+
+::ng-deep .link-1 {
+    stroke: #333;
+    stroke-width: 1px
+}
+
+::ng-deep .link-2 {
+    stroke: #666;
+    stroke-width: 1px;
+}
+
+::ng-deep .link-3 {
+    stroke: #666;
+    stroke-width: 1px;
+}
+
+::ng-deep .link-4 {
+    stroke: #666;
+    stroke-width: 1px;
+}

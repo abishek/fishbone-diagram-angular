@@ -1,6 +1,12 @@
 {
   "name": "ngx-fishbone-diagram",
   "version": "0.1.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/abishek/fishbone-diagram-angular"
+  },
+  "homepage": "https://abishek.github.io/fishbone-diagram-angular/",
   "peerDependencies": {
     "@angular/common": "^12.1.0",
     "@angular/core": "^12.1.0",

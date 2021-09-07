@@ -2,6 +2,30 @@
 
 This library is a typescript implementation of the [d3 fishbone](http://bl.ocks.org/uredkar/c341cb131226dc53082283b8f853be45) or [d3 fishbone](http://bl.ocks.org/bollwyvl/9239214) and the [d3-fishbone-angular](https://github.com/umitgunduz/d3-fishbone-angular) library written for angular 1. It is also updated to work with the latest [d3](https://d3js.org/) library. I'll be adding a few features to this library going forward, but at the moment, it is just a faithful implementation of the said libraries.
 
+## Usage
+
+You can install the package to your app using
+```
+npm i ngx-fishbone-diagram
+```
+
+Once installed, you can display the diagram in your component/page using the following tag
+```
+<ngx-fishbone-diagram [data]="data"></ngx-fishbone-diagram>
+```
+
+Here `data` is a hierarchical JSON with the following format
+```
+data = {
+  "name": "Topic",
+  "children": [
+    {"name": "Child 1", "children": [{}]},
+    {"name": "Child 2", "children": [{}]},
+  ]
+}
+```
+
+You can take a look at the [test.data.ts file](https://github.com/abishek/fishbone-diagram-angular/blob/main/src/app/test.data.ts) in the repo for the data schema.
 
 ## Planned Features
 

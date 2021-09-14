@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
 
 // D3
 import * as d3 from 'd3';
@@ -10,7 +10,7 @@ import { scaleLog } from 'd3-scale';
   templateUrl: './ngx-fishbone-diagram.component.html',
   styleUrls: ['./ngx-fishbone-diagram.component.css']
 })
-export class NgxFishboneDiagramComponent implements OnInit {
+export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
 
   @Input()
   data: any;
@@ -41,7 +41,7 @@ export class NgxFishboneDiagramComponent implements OnInit {
       .attr('height', this.height)
       .call(this.defaultArrow);
 
-    this.buildNodes(this.data);
+    // this.buildNodes(this.data);
     /* setup the nodes */
     this.node = this.svg.selectAll(".node")
       .data(this.nodes);
@@ -78,6 +78,13 @@ export class NgxFishboneDiagramComponent implements OnInit {
       .force("collision", forceCollide(10))
       .force('link', forceLink(this.links))
       .on("tick", () => this.tick());
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    // check if "data" input has changed
+    if (changes.data) {
+      this.buildNodes(this.data);
+    }
   }
 
   buildNodes(node: any) {

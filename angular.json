@@ -17,8 +17,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "docs",
-            "deployUrl": "https://abishek.github.io/fishbone-diagram-angular/",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -34,6 +32,8 @@
           },
           "configurations": {
             "production": {
+              "deployUrl": "https://abishek.github.io/fishbone-diagram-angular/",
+              "outputPath": "docs/",
               "budgets": [
                 {
                   "type": "initial",
@@ -55,6 +55,7 @@
               "outputHashing": "all"
             },
             "development": {
+              "outputPath": "dist/",
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,

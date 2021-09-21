@@ -22,7 +22,6 @@ export class AppComponent {
   onNodeSelect(evt: string) {
     const parentNode = this.findNodeById(this.data, evt);
     const dialog = this.dialog.open(AddNodeDialogComponent, {width: '300px', data: parentNode});
-    console.log({parentNode});
     dialog.afterClosed().subscribe((res) => {
       if(res) {
         const newNode = {
@@ -53,5 +52,9 @@ export class AppComponent {
       }
     }
     return resultNode;
+  }
+
+  showHelp() {
+
   }
 }

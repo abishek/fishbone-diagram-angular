@@ -1,3 +1,8 @@
-<h1>Angular Fishbone Diagrams</h1>
+<mat-toolbar>
+    <span>Angular Fishbone Diagrams</span>
+    <span class="spacer"></span>
+    <button mat-icon-button class="help" (click)="showHelp()"><mat-icon>help</mat-icon></button>
+</mat-toolbar>
 
+<p>Click on a node to add child nodes. Build as deep as you need to get to your root causes.</p>
 <ngx-fishbone-diagram [data]="data" (selected)="onNodeSelect($event)"></ngx-fishbone-diagram>

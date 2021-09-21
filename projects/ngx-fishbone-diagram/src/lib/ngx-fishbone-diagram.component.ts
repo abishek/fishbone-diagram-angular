@@ -4,7 +4,9 @@ import { Component, OnInit, Input, SimpleChanges, OnChanges, Output, EventEmitte
 import * as d3 from 'd3';
 import { forceCollide, forceLink, forceManyBody, forceSimulation } from 'd3-force';
 import { scaleLog } from 'd3-scale';
-import * as saveSVGasPNG from 'save-svg-as-png';
+
+import * as uuid from "uuid";
+import * as d3SvgToPng from 'd3-svg-to-png';
 
 @Component({
   selector: 'ngx-fishbone-diagram',
@@ -55,13 +57,14 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
           .attr('height', this.height)
           .call(this.defaultArrow);
       }
-      this.nodes = [];
+      //this.nodes = [];
+      // FIXME: Rebuild links from scratch. Seems simpler to do this.
       this.links = [];
       this.buildNodes(this.data);
       this.setupNodes();
       if (this.force) {
         this.force.stop(); // this is just in case. ideally, the force system either doesn't exist here or is already stopped.
-        this.force.nodes(this.nodes);
+        this.force.nodes(this.nodes, (d: any) => { return d.uuid; });
         this.force.force('link', forceLink(this.links));
         this.force.alpha(1).restart();
       }
@@ -71,7 +74,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   setupNodes() {
     /* setup the nodes */
     this.node = this.svg.selectAll(".node")
-      .data(this.nodes);
+      .data(this.nodes, (d: any) => { return d.uuid; });
 
     this.node.enter()
       .append("g")
@@ -84,7 +87,8 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       .attr("class", (d: any) => "label-" + d.depth)
       .attr("text-anchor", (d: any) => { return !d.depth ? "start" : d.horizontal ? "end" : "middle"; })
       .attr("dy", (d: any) => { return d.horizontal ? ".35em" : d.region === 1 ? "1em" : "-0.2em"; })
-      .text((d: any) => { console.log(d.name); return d.name; });
+    /* FIXME: Dynamically added nodes are handled incorrectly :-( */
+      .text((d: any) => { return d.name; });
 
     this.node.exit().remove();
 
@@ -93,7 +97,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       .data(this.links);
     this.link.enter()
       .append('line')
-      .attr("class", (d: any) => { console.log(d.name, d.depth); return "link link-" + d.depth; })
+      .attr("class", (d: any) => {  return "link link-" + d.depth; })
       .attr("marker-end", (d: any) => { return d.arrow ? "url(#arrow)" : null; });
     this.link.exit()
       .remove();
@@ -101,23 +105,37 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
     this.root = d3.select(".root").node();
   }
 
+  /**
+   *  buildNodes is a function to rebuild the node list and pad all the nodes with layout directives.
+   *  For the layout and forces to work properly, we use a variety of node properties like horizontal,
+   *  vertical, region, depth, tail among others.
+   * */
   buildNodes(node: any) {
-    this.nodes.push(node);
-
+    /* don't add a node that already exists in the list of nodes. */
+    const idx = this.nodes.findIndex((val:any) => {return val.uuid === node.uuid;});
+    if(idx === -1) {
+      this.nodes.push(node);
+    }
     var cx = 0;
 
-    var between = [node, node.connector],
-      nodeLinks = [{
+    let between = [node, node.connector];
+    let nodeLinks = [{
         source: node,
         target: node.connector,
         arrow: true,
         depth: node.depth || 0
-      }],
-      prev: any,
-      childLinkCount;
+      }];
+    let prev: any;
+    let childLinkCount;
 
     if (!node.parent) {
-      this.nodes.push(prev = { tail: true });
+      /* don't add a tail, if one already exists in the list. */
+      const tailIdx = this.nodes.findIndex((val: any) => { return val.tail });
+      if (tailIdx === -1) {
+        this.nodes.push(prev = { tail: true, uuid: uuid.v4() });
+      } else {
+        prev = this.nodes[tailIdx];
+      }
       between = [prev, node];
       nodeLinks[0].source = prev;
       nodeLinks[0].target = node;
@@ -144,11 +162,12 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       if (node.root && prev && !prev.tail) {
         this.nodes.push(child.connector = {
           between: between,
-          childIdx: prev.childIdx
+          childIdx: prev.childIdx,
+          uuid: uuid.v4()
         });
         prev = null;
       } else {
-        this.nodes.push(prev = child.connector = { between: between, childIdx: cx++ });
+        this.nodes.push(prev = child.connector = { between: between, childIdx: cx++, uuid: uuid.v4() });
       }
 
       nodeLinks.push({
@@ -174,11 +193,17 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
 
   }
 
+  /**
+   * tick is the actual force layout method. Force is a simulation that happens in
+   * steps. At each step, a `tick` event is generated. We connect the event to this
+   * method. In this method, we compute the locations of each node based on the forces
+   * and position them accordingly.
+   * */
   tick() {
     let k = this.force.alpha() * 0.1;
     this.nodes.forEach((n: any) => this.calculateXY(n, k));
 
-    d3.selectAll('.node').attr("transform", function (d: any, i: number) {
+    d3.selectAll('.node').attr("transform", function (d: any) {
       return "translate(" + d.x + "," + d.y + ")";
     });
 
@@ -257,11 +282,11 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   }
 
   downloadImage() {
-    saveSVGasPNG.saveSvgAsPng(this.svg, 'fishboneDiagram.png');
+    d3SvgToPng.default('svg', 'fishboneDiagram', { download:true, format:'png' });
   }
 
   simulationDone() {
     console.info("layout complete.");
-    console.log(this.nodes);
+    console.log(this.nodes.length + ' nodes and ' + this.links.length + ' links');
   }
 }

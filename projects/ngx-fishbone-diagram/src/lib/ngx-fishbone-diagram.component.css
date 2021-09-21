@@ -2,6 +2,16 @@
     margin: 0 auto;
 }
 
+.downloadButton {
+    float: right;
+    margin-right: 10%;
+    background-color: white;
+    border: gray 1px solid;
+    border-radius: 4px;
+    padding: 4px;
+    cursor: pointer;
+}
+
 ::ng-deep .node {
     cursor: pointer;
 }

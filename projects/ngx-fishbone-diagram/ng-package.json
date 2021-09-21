@@ -8,5 +8,8 @@
       "d3-scale": "d3-scale",
       "d3-force": "d3-force"
     }
-  }
+  },
+  "allowedNonPeerDependencies": [
+    "d3", "d3-force","d3-scale", "d3-svg-to-png", "uuid"
+  ]
 }

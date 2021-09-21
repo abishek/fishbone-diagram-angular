@@ -27,9 +27,13 @@ data = {
 
 You can take a look at the [test.data.ts file](https://github.com/abishek/fishbone-diagram-angular/blob/main/src/app/test.data.ts) in the repo for the data schema.
 
+## Inputs and Outputs
+
+The component is intialised with a `data` input and generates a `selected` event with the node data on which the select event occured. The component watches for changes to the `data` input. So between these two we should be able to build a fully functional fishbone session.
+
 ## Planned Features
 
-- [ ] Ability add nodes dynamically
+- [x] Ability add nodes dynamically
 - [ ] Conduct a full Fishbone session starting from a empty canvas.
 - [ ] Ability to customize colours and appearance for the nodes and links.
 

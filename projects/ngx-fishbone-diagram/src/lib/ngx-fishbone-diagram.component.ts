@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
 
 // D3
 import * as d3 from 'd3';
 import { forceCollide, forceLink, forceManyBody, forceSimulation } from 'd3-force';
 import { scaleLog } from 'd3-scale';
+import * as saveSVGasPNG from 'save-svg-as-png';
 
 @Component({
   selector: 'ngx-fishbone-diagram',
@@ -15,7 +16,9 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   @Input()
   data: any;
 
-  linkScale = scaleLog().domain([1, 5]).range([60, 30]);
+  @Output()
+  selected = new EventEmitter<string>();
+
   svg: any;
   force: any;
   root: any;
@@ -33,15 +36,39 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   constructor() { }
 
   ngOnInit(): void {
+    this.force = forceSimulation(this.nodes)
+      .force("charge", forceManyBody().strength(-30))
+      .force("collision", forceCollide(-30))
+      .force('link', forceLink(this.links))
+      .on("end", () => this.simulationDone())
+      .on("tick", () => this.tick());
+  }
 
-    /* TODO: A more angular way to do this is to use a ViewChild. */
-    this.svg = d3.select("#d3Container")
-      .append('svg')
-      .attr('width', this.width)
-      .attr('height', this.height)
-      .call(this.defaultArrow);
+  ngOnChanges(changes: SimpleChanges) {
+    // check if "data" input has changed
+    if (changes.data) {
+      if (!this.svg) {
+        /* TODO: A more angular way to do this is to use a ViewChild. */
+        this.svg = d3.select("#d3Container")
+          .append('svg')
+          .attr('width', this.width)
+          .attr('height', this.height)
+          .call(this.defaultArrow);
+      }
+      this.nodes = [];
+      this.links = [];
+      this.buildNodes(this.data);
+      this.setupNodes();
+      if (this.force) {
+        this.force.stop(); // this is just in case. ideally, the force system either doesn't exist here or is already stopped.
+        this.force.nodes(this.nodes);
+        this.force.force('link', forceLink(this.links));
+        this.force.alpha(1).restart();
+      }
+    }
+  }
 
-    // this.buildNodes(this.data);
+  setupNodes() {
     /* setup the nodes */
     this.node = this.svg.selectAll(".node")
       .data(this.nodes);
@@ -53,11 +80,11 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       .append("text");
 
     /* find all text nodes and add the actual text to it. */
-    d3.selectAll("text")
+    this.svg.selectAll("text")
       .attr("class", (d: any) => "label-" + d.depth)
       .attr("text-anchor", (d: any) => { return !d.depth ? "start" : d.horizontal ? "end" : "middle"; })
       .attr("dy", (d: any) => { return d.horizontal ? ".35em" : d.region === 1 ? "1em" : "-0.2em"; })
-      .text((d: any) => { return d.name; });
+      .text((d: any) => { console.log(d.name); return d.name; });
 
     this.node.exit().remove();
 
@@ -66,25 +93,12 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       .data(this.links);
     this.link.enter()
       .append('line')
-      .attr("class", (d: any) => { return "link link-" + d.depth; })
+      .attr("class", (d: any) => { console.log(d.name, d.depth); return "link link-" + d.depth; })
       .attr("marker-end", (d: any) => { return d.arrow ? "url(#arrow)" : null; });
     this.link.exit()
       .remove();
 
     this.root = d3.select(".root").node();
-
-    this.force = forceSimulation(this.nodes)
-      .force("charge", forceManyBody().strength(-20))
-      .force("collision", forceCollide(10))
-      .force('link', forceLink(this.links))
-      .on("tick", () => this.tick());
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    // check if "data" input has changed
-    if (changes.data) {
-      this.buildNodes(this.data);
-    }
   }
 
   buildNodes(node: any) {
@@ -161,9 +175,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   }
 
   tick() {
-
-    let k = this.force.alpha() * 6;
-    this.root = d3.select(".root").node();
+    let k = this.force.alpha() * 0.1;
     this.nodes.forEach((n: any) => this.calculateXY(n, k));
 
     d3.selectAll('.node').attr("transform", function (d: any, i: number) {
@@ -233,12 +245,23 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   }
 
   linkDistance(d: any) {
-    const linkScale = scaleLog().domain([1, 5]).range([60, 30]);
+    const linkScale = scaleLog().domain([1, 10]).range([60, 30]);
     return (d.target.maxChildIdx + 1) * linkScale(d.depth + 1);
   }
 
   nodeClicked(d: any, i: any) {
-    console.log({ d });
-    console.log({ i });
+    if (this.force) {
+      this.force.stop();
+    }
+    this.selected.emit(i.uuid);
+  }
+
+  downloadImage() {
+    saveSVGasPNG.saveSvgAsPng(this.svg, 'fishboneDiagram.png');
+  }
+
+  simulationDone() {
+    console.info("layout complete.");
+    console.log(this.nodes);
   }
 }

@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import * as uuid from 'uuid';
 
 import { AddNodeDialogComponent } from './add-node-dialog/add-node-dialog.component';
+import { HelpComponent } from './help/help.component';
 import { testData } from './test.data';
 
 @Component({
@@ -55,6 +56,6 @@ export class AppComponent {
   }
 
   showHelp() {
-
+    this.dialog.open(HelpComponent, {width: '300px'});
   }
 }

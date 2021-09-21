@@ -13,11 +13,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddNodeDialogComponent } from './add-node-dialog/add-node-dialog.component';
+import { HelpComponent } from './help/help.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AddNodeDialogComponent
+    AddNodeDialogComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule,

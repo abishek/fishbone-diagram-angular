@@ -57,8 +57,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
           .attr('height', this.height)
           .call(this.defaultArrow);
       }
-      //this.nodes = [];
-      // FIXME: Rebuild links from scratch. Seems simpler to do this.
+      this.nodes = [];
       this.links = [];
       this.buildNodes(this.data);
       this.setupNodes();
@@ -87,7 +86,6 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       .attr("class", (d: any) => "label-" + d.depth)
       .attr("text-anchor", (d: any) => { return !d.depth ? "start" : d.horizontal ? "end" : "middle"; })
       .attr("dy", (d: any) => { return d.horizontal ? ".35em" : d.region === 1 ? "1em" : "-0.2em"; })
-    /* FIXME: Dynamically added nodes are handled incorrectly :-( */
       .text((d: any) => { return d.name; });
 
     this.node.exit().remove();
@@ -97,7 +95,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       .data(this.links);
     this.link.enter()
       .append('line')
-      .attr("class", (d: any) => {  return "link link-" + d.depth; })
+      .attr("class", (d: any) => { return "link link-" + d.depth; })
       .attr("marker-end", (d: any) => { return d.arrow ? "url(#arrow)" : null; });
     this.link.exit()
       .remove();
@@ -112,19 +110,19 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
    * */
   buildNodes(node: any) {
     /* don't add a node that already exists in the list of nodes. */
-    const idx = this.nodes.findIndex((val:any) => {return val.uuid === node.uuid;});
-    if(idx === -1) {
+    const idx = this.nodes.findIndex((val: any) => { return val.uuid === node.uuid; });
+    if (idx === -1) {
       this.nodes.push(node);
     }
     var cx = 0;
 
     let between = [node, node.connector];
     let nodeLinks = [{
-        source: node,
-        target: node.connector,
-        arrow: true,
-        depth: node.depth || 0
-      }];
+      source: node,
+      target: node.connector,
+      arrow: true,
+      depth: node.depth || 0
+    }];
     let prev: any;
     let childLinkCount;
 
@@ -169,12 +167,11 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       } else {
         this.nodes.push(prev = child.connector = { between: between, childIdx: cx++, uuid: uuid.v4() });
       }
-
       nodeLinks.push({
         source: child,
         target: child.connector,
         depth: child.depth,
-        arrow: true,
+        arrow: true
       });
 
       /* recurse capturing number of links created */
@@ -185,7 +182,15 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
 
     between[1].maxChildIdx = cx;
 
-    this.links.unshift(...nodeLinks);
+    nodeLinks.forEach((link: any) => {
+      let lidx = this.links.findIndex((val)=> {
+        return val.source.uuid === link.source.uuid && val.target.uuid === link.target.uuid;
+      });
+      if (lidx ===-1) {
+        this.links.push(link);
+      }
+    });
+    //this.links.unshift(...nodeLinks);
 
     /* the number of links created byt this node and its children...
        TODO: use `linkCount` and/instead of `childIdx` for spacing */
@@ -203,7 +208,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
     let k = this.force.alpha() * 0.1;
     this.nodes.forEach((n: any) => this.calculateXY(n, k));
 
-    d3.selectAll('.node').attr("transform", function (d: any) {
+    d3.selectAll('.node').attr("transform", function(d: any) {
       return "translate(" + d.x + "," + d.y + ")";
     });
 
@@ -282,7 +287,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   }
 
   downloadImage() {
-    d3SvgToPng.default('svg', 'fishboneDiagram', { download:true, format:'png' });
+    d3SvgToPng.default('svg', 'fishboneDiagram', { download: true, format: 'png' });
   }
 
   simulationDone() {

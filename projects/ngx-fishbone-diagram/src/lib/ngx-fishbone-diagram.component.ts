@@ -7,6 +7,7 @@ import { scaleLog } from 'd3-scale';
 
 import * as uuid from "uuid";
 import * as d3SvgToPng from 'd3-svg-to-png';
+import { NgxFishboneDiagramService } from './ngx-fishbone-diagram.service';
 
 @Component({
   selector: 'ngx-fishbone-diagram',
@@ -17,6 +18,12 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
 
   @Input()
   data: any;
+
+  @Input()
+  showDowloadButton: boolean = false;
+
+  @Input()
+  btnClass = 'downloadButton';
 
   @Output()
   selected = new EventEmitter<string>();
@@ -35,13 +42,21 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   width = 1280;
   height = 600;
 
-  constructor() { }
+  constructor(
+    private svc: NgxFishboneDiagramService
+  ) {
+    this.svc.restartRequest$.subscribe((req: boolean) => {
+      if (req) {
+        this.restart();
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.force = forceSimulation(this.nodes)
-      .force("charge", forceManyBody().strength(-30))
-      .force("collision", forceCollide(-30))
-      .force('link', forceLink(this.links))
+      .force("charge", forceManyBody().strength(-4))
+      .force("collision", forceCollide(21))
+      .force('link', forceLink(this.links).distance(this.linkDistance))
       .on("end", () => this.simulationDone())
       .on("tick", () => this.tick());
   }
@@ -60,13 +75,17 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       this.nodes = [];
       this.links = [];
       this.buildNodes(this.data);
-      this.setupNodes();
-      if (this.force) {
-        this.force.stop(); // this is just in case. ideally, the force system either doesn't exist here or is already stopped.
-        this.force.nodes(this.nodes, (d: any) => { return d.uuid; });
-        this.force.force('link', forceLink(this.links));
-        this.force.alpha(1).restart();
-      }
+      this.restart();
+    }
+  }
+
+  restart() {
+    this.setupNodes();
+    if (this.force) {
+      this.force.stop(); // this is just in case. ideally, the force system either doesn't exist here or is already stopped.
+      this.force.nodes(this.nodes, (d: any) => { return d.uuid; });
+      this.force.force('link', forceLink(this.links).distance(this.linkDistance));
+      this.force.alpha(1).restart();
     }
   }
 
@@ -128,7 +147,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
 
     if (!node.parent) {
       /* don't add a tail, if one already exists in the list. */
-      const tailIdx = this.nodes.findIndex((val: any) => { return val.tail });
+      const tailIdx = this.nodes.findIndex((val: any) => { return val.tail; });
       if (tailIdx === -1) {
         this.nodes.push(prev = { tail: true, uuid: uuid.v4() });
       } else {
@@ -183,10 +202,10 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
     between[1].maxChildIdx = cx;
 
     nodeLinks.forEach((link: any) => {
-      let lidx = this.links.findIndex((val)=> {
+      let lidx = this.links.findIndex((val) => {
         return val.source.uuid === link.source.uuid && val.target.uuid === link.target.uuid;
       });
-      if (lidx ===-1) {
+      if (lidx === -1) {
         this.links.push(link);
       }
     });
@@ -208,7 +227,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
     let k = this.force.alpha() * 0.1;
     this.nodes.forEach((n: any) => this.calculateXY(n, k));
 
-    d3.selectAll('.node').attr("transform", function(d: any) {
+    d3.selectAll('.node').attr("transform", function (d: any) {
       return "translate(" + d.x + "," + d.y + ")";
     });
 
@@ -274,9 +293,9 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       .attr("d", "M0,-5L10,0L0,5");
   }
 
-  linkDistance(d: any) {
-    const linkScale = scaleLog().domain([1, 10]).range([60, 30]);
-    return (d.target.maxChildIdx + 1) * linkScale(d.depth + 1);
+  linkDistance(l: any) {
+    const linkScale = scaleLog().domain([1, 5]).range([60, 30]);
+    return (l.target.maxChildIdx + 1) * linkScale(l.depth + 1);
   }
 
   nodeClicked(d: any, i: any) {

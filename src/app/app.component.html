@@ -4,4 +4,10 @@
     <button mat-icon-button class="help" (click)="showHelp()"><mat-icon>help</mat-icon></button>
 </mat-toolbar>
 
-<ngx-fishbone-diagram [data]="data" (selected)="onNodeSelect($event)"></ngx-fishbone-diagram>
+<ngx-fishbone-diagram 
+    [showDowloadButton]="true"
+    [btnClass]="'btn-green'"
+    [btnText]="'Save as PNG'"
+    [data]="data" 
+    (selected)="onNodeSelect($event)">
+</ngx-fishbone-diagram>

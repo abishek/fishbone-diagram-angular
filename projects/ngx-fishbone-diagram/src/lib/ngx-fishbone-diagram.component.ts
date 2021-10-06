@@ -25,6 +25,9 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   @Input()
   btnClass = 'downloadButton';
 
+  @Input()
+  btnText = 'Download PNG';
+
   @Output()
   selected = new EventEmitter<string>();
 

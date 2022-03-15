@@ -2,12 +2,7 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/ngx-fishbone-diagram",
   "lib": {
-    "entryFile": "src/public-api.ts",
-    "umdModuleIds": {
-      "d3": "d3",
-      "d3-scale": "d3-scale",
-      "d3-force": "d3-force"
-    }
+    "entryFile": "src/public-api.ts"
   },
   "allowedNonPeerDependencies": [
     "d3", "d3-force","d3-scale", "d3-svg-to-png", "uuid"

@@ -136,9 +136,148 @@ export const testData1 = {
     ]
 }
 
-export const testData = {
+export const testData2 = {
     "name": "Quality",
     "uuid": "1",
     "children": [ 
+    ]
+}
+
+export const testData = {
+    "name": "A diagram with long texted nodes.",
+    "uuid": "1",
+    "children": [
+        {
+            "name": "Node with long text",
+            "uuid": "2",
+            "children": [
+                {
+                    "name": "child with long text", 
+                    "uuid": "21"
+                },
+                {
+                    "name": "child with longer text", 
+                    "uuid": "22"
+                },
+                {
+                    "name": "child with even longer text", 
+                    "uuid": "23"
+                },
+                {
+                    "name": "child with very very very long text", 
+                    "uuid": "24"
+                }
+            ]
+        },
+        {
+            "name": "Node with even longer text",
+            "uuid": "3",
+            "children": [
+                {
+                    "name": "child with long text", 
+                    "uuid": "31"
+                },
+                {
+                    "name": "child with longer text", 
+                    "uuid": "32"
+                },
+                {
+                    "name": "child with even longer text", 
+                    "uuid": "33"
+                },
+                {
+                    "name": "child with very very very long text", 
+                    "uuid": "34"
+                }
+            ]
+        },
+        {
+            "name": "third node with very long text",
+            "uuid": "4",
+            "children": [
+                {
+                    "name": "child with long text", 
+                    "uuid": "41"
+                },
+                {
+                    "name": "child with longer text", 
+                    "uuid": "42"
+                },
+                {
+                    "name": "child with even longer text", 
+                    "uuid": "43"
+                },
+                {
+                    "name": "child with very very very long text", 
+                    "uuid": "44"
+                }
+            ]
+        },
+        {
+            "name": "fourth node with even longer text",
+            "uuid": "5",
+            "children": [
+                {
+                    "name": "child with long text", 
+                    "uuid": "51"
+                },
+                {
+                    "name": "child with longer text", 
+                    "uuid": "52"
+                },
+                {
+                    "name": "child with even longer text", 
+                    "uuid": "53"
+                },
+                {
+                    "name": "child with very very very long text", 
+                    "uuid": "54"
+                }
+            ]
+        },
+        {
+            "name": "fifth node also with very long text and some more.",
+            "uuid": "6",
+            "children": [
+                {
+                    "name": "child with long text", 
+                    "uuid": "61"
+                },
+                {
+                    "name": "child with longer text", 
+                    "uuid": "62"
+                },
+                {
+                    "name": "child with even longer text", 
+                    "uuid": "63"
+                },
+                {
+                    "name": "child with very very very long text", 
+                    "uuid": "64"
+                }
+            ]
+        },
+        {
+            "name": "sixth node with even even longer text and some more.",
+            "uuid": "7",
+            "children": [
+                {
+                    "name": "child with long text", 
+                    "uuid": "71"
+                },
+                {
+                    "name": "child with longer text", 
+                    "uuid": "72"
+                },
+                {
+                    "name": "child with even longer text", 
+                    "uuid": "73"
+                },
+                {
+                    "name": "child with very very very long text", 
+                    "uuid": "74"
+                }
+            ]
+        }
     ]
 }

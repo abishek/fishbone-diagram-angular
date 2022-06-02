@@ -38,7 +38,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   link: any;
   nodeIdx = 0;
 
-  margin = 50;
+  margin = 100;
 
   nodes = new Array<any>();
   links = new Array<any>();
@@ -57,8 +57,8 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.force = forceSimulation(this.nodes)
-      .force("charge", forceManyBody().strength(-4))
-      .force("collision", forceCollide(21))
+      .force("charge", forceManyBody().strength(-10))
+      .force("collision", forceCollide(15))
       .force('link', forceLink(this.links).distance(this.linkDistance))
       .on("end", () => this.simulationDone())
       .on("tick", () => this.tick());
@@ -109,6 +109,10 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       .attr("text-anchor", (d: any) => { return !d.depth ? "start" : d.horizontal ? "end" : "middle"; })
       .attr("dy", (d: any) => { return d.horizontal ? ".35em" : d.region === 1 ? "1em" : "-0.2em"; })
       .text((d: any) => { return d.name; });
+
+    this.svg.selectAll("text")
+      .call(this.wrap, 100);
+
 
     this.node.exit().remove();
 
@@ -227,7 +231,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
    * and position them accordingly.
    * */
   tick() {
-    let k = this.force.alpha() * 0.1;
+    let k = this.force.alpha() * 0.8;
     this.nodes.forEach((n: any) => this.calculateXY(n, k));
 
     d3.selectAll('.node').attr("transform", function (d: any) {
@@ -297,7 +301,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
   }
 
   linkDistance(l: any) {
-    const linkScale = scaleLog().domain([1, 5]).range([60, 30]);
+    const linkScale = scaleLog().domain([1, 5]).range([70, 10]);
     return (l.target.maxChildIdx + 1) * linkScale(l.depth + 1);
   }
 
@@ -316,4 +320,48 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
     console.info("layout complete.");
     console.log(this.nodes.length + ' nodes and ' + this.links.length + ' links');
   }
+
+  /*
+   * text wrap function for use with SVG.
+   * https://bl.ocks.org/mbostock/7555321
+   */
+  wrap(selectionList: any, width: number) {
+
+    selectionList.each(function(selection: any, idx: number, selList: any) {
+      let text = selection.name;
+      let domNode = d3.select(selList[idx]);
+      let dy = parseFloat(domNode.attr('dy'));
+      let y = domNode.attr('y');
+      let words: Array<string> = [];
+      if(text) {
+        words = text.split(/\s+/).reverse();
+      }
+      let word: string | undefined;
+      let line: Array<string> = [];
+      let lineNumber = 0;
+      // let lineHeight = calculatePosition(selection.depth, selection.region, lineNumber);
+      let tspan = domNode.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", `${dy}em`);
+      while(word = words.pop()) {
+        line.push(word);
+        tspan.text(line.join(" "));
+        let tspanNode = tspan.node();
+        let t = line.join(" ");
+        if (tspanNode && tspanNode.getComputedTextLength() > width) {
+          line.pop();
+          tspan.text(line.join(" "));
+          line = [word];
+          let _dy = calculatePosition(selection.depth, selection.region, ++lineNumber);
+          tspan = domNode.append("tspan").attr("x", 0).attr("y", y).attr("dy", `${_dy}em`).text(word);
+        }
+      }
+    });
+  }
+}
+
+function calculatePosition(depth: number, region:  number, lineNumber: number) {
+  // at depth 1, for the top half, increment by one lineNumber;
+  // let lh = 1;
+
+  // console.log(`calculateLineHeight(depth: ${depth}, region: ${region}, lineNumber: ${lineNumber}) = ${lh}`);
+  return 1;
 }

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { NgxFishboneDiagramService } from 'ngx-fishbone-diagram';
 import * as uuid from 'uuid';
 
 import { AddNodeDialogComponent } from './add-node-dialog/add-node-dialog.component';
@@ -14,10 +15,11 @@ import { testData } from './test.data';
 export class AppComponent {
 
   constructor(
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private svc: NgxFishboneDiagramService,
   ) { }
 
-  data = testData;
+  data:any = testData;
   // data: any = undefined;
 
   onNodeSelect(evt: string) {
@@ -57,5 +59,10 @@ export class AppComponent {
 
   showHelp() {
     this.dialog.open(HelpComponent, {width: '300px'});
+  }
+
+  reset() {
+    this.data = null;
+    this.svc.restart();
   }
 }

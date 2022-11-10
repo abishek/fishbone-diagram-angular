@@ -2,6 +2,8 @@
 
 This library is a typescript implementation of the [d3 fishbone](http://bl.ocks.org/uredkar/c341cb131226dc53082283b8f853be45) or [d3 fishbone](http://bl.ocks.org/bollwyvl/9239214) and the [d3-fishbone-angular](https://github.com/umitgunduz/d3-fishbone-angular) library written for angular 1. It is also updated to work with the latest [d3](https://d3js.org/) library. I'll be adding a few features to this library going forward, but at the moment, it is just a faithful implementation of the said libraries.
 
+For Angular 14, use v0.4.2. This version does not have support for clearing the nodes. For Angular 13, use v0.4.3-13. This has support for clearing the nodes as well. It doesn't make enough sense to support an older version of angular, but I just have that need so I've built that in first. I'll resolve this asap.
+
 ## Usage
 
 You can install the package to your app using

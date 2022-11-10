@@ -1,13 +1,14 @@
 <mat-toolbar>
     <span>Angular Fishbone Diagrams</span>
     <span class="spacer"></span>
-    <button mat-icon-button class="help" (click)="showHelp()"><mat-icon>help</mat-icon></button>
+    <button mat-icon-button class="help" (click)="showHelp()">
+        <mat-icon>help</mat-icon>
+    </button>
+    <button mat-icon-button class="help" (click)="reset()">
+        <mat-icon>delete</mat-icon>
+    </button>
 </mat-toolbar>
 
-<ngx-fishbone-diagram 
-    [showDowloadButton]="true"
-    [btnClass]="'btn-green'"
-    [btnText]="'Save as PNG'"
-    [data]="data" 
+<ngx-fishbone-diagram [showDowloadButton]="true" [btnClass]="'btn-green'" [btnText]="'Save as PNG'" [data]="data"
     (selected)="onNodeSelect($event)">
 </ngx-fishbone-diagram>

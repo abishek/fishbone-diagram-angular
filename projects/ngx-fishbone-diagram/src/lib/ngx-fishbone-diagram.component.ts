@@ -77,8 +77,10 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
       }
       this.nodes = [];
       this.links = [];
-      this.buildNodes(this.data);
-      this.restart();
+      if (this.data) {
+        this.buildNodes(this.data);
+        this.restart();
+      }
     }
   }
 
@@ -139,7 +141,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
     const idx = this.nodes.findIndex((val: any) => { return val.uuid === node.uuid; });
     if (idx === -1) {
       this.nodes.push(node);
-    }
+    } 
     var cx = 0;
 
     let between = [node, node.connector];
@@ -247,6 +249,7 @@ export class NgxFishboneDiagramComponent implements OnInit, OnChanges {
 
   calculateXY(d: any, k: number) {
     this.root = d3.select('.root').node();
+
     /* handle the middle... could probably store the root width... */
     if (d.root) { d.x = this.width - (this.margin + this.root.getBBox().width); }
     if (d.tail) { d.x = this.margin; d.y = this.height / 2; }

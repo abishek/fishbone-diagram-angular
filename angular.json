@@ -33,7 +33,7 @@
           },
           "configurations": {
             "production": {
-              "deployUrl": "https://abishek.github.io/fishbone-diagram-angular/",
+              "baseHref": "https://abishek.github.io/fishbone-diagram-angular/",
               "outputPath": "docs/",
               "budgets": [
                 {
@@ -136,5 +136,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "9a19b239-763b-40ed-bbb2-681497fece8f"
   }
 }

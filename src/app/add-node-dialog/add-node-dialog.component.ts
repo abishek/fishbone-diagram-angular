@@ -1,10 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import {  MatLegacyDialogRef as MatDialogRef, MAT_LEGACY_DIALOG_DATA as MAT_DIALOG_DATA } from '@angular/material/legacy-dialog';
+import {  MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-add-node-dialog',
   templateUrl: './add-node-dialog.component.html',
-  styleUrls: ['./add-node-dialog.component.css']
+  styleUrls: ['./add-node-dialog.component.css'],
 })
 export class AddNodeDialogComponent implements OnInit {
 

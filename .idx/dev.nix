@@ -12,20 +12,10 @@
         command = [
           "npm"
           "run"
-          "start"
-          "--"
-          "--port"
-          "$PORT"
-          "--host"
-          "0.0.0.0"
-          "--disable-host-check"
+          "watch:shell"
         ];
         manager = "web";
         id = "web";
-      }
-      {
-        id = "ios";
-        manager = "ios";
       }
     ];
   };

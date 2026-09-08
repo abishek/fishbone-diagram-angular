@@ -5,7 +5,7 @@ This library is a typescript implementation of the [d3 fishbone](http://bl.ocks.
 The npm package is published in compatibility ranges. Install the package version whose peer dependency range includes your application's Angular version:
 
 ```
-npm install ngx-fishbone-diagram@^0.5.1
+npm install ngx-fishbone-diagram
 ```
 
 Each release is compiled and packaged in isolation, so the demo application's Angular version does not affect published library artifacts. See [DEPLOY.md](DEPLOY.md) for the release and npm publishing process.

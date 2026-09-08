@@ -1,8 +1,14 @@
-# Fishbone Diagram for Angular 13/14
+# Fishbone Diagram for Angular
 
 This library is a typescript implementation of the [d3 fishbone](http://bl.ocks.org/uredkar/c341cb131226dc53082283b8f853be45) or [d3 fishbone](http://bl.ocks.org/bollwyvl/9239214) and the [d3-fishbone-angular](https://github.com/umitgunduz/d3-fishbone-angular) library written for angular 1. It is also updated to work with the latest [d3](https://d3js.org/) library. I'll be adding a few features to this library going forward, but at the moment, it is just a faithful implementation of the said libraries.
 
-For Angular 14, use v0.4.2. This version does not have support for clearing the nodes. For Angular 13, use v0.4.3-13. This has support for clearing the nodes as well. It doesn't make enough sense to support an older version of angular, but I just have that need so I've built that in first. I'll resolve this asap.
+The npm package is published in compatibility ranges. Install the package version whose peer dependency range includes your application's Angular version:
+
+```
+npm install ngx-fishbone-diagram@^0.5.1
+```
+
+Each release is compiled and packaged in isolation, so the demo application's Angular version does not affect published library artifacts. See [DEPLOY.md](DEPLOY.md) for the release and npm publishing process.
 
 ## Usage
 

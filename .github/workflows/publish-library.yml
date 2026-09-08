@@ -1,0 +1,39 @@
+name: Publish Angular library
+
+on:
+  workflow_dispatch:
+    inputs:
+      angular_minimum:
+        description: Oldest supported Angular major; used to compile the package
+        required: true
+        type: choice
+        options: ['13', '14', '15', '16', '17', '18', '19', '20', '21']
+      angular_maximum:
+        description: Newest supported Angular major; controls the peer dependency range
+        required: true
+        type: choice
+        options: ['13', '14', '15', '16', '17', '18', '19', '20', '21']
+      version:
+        description: Exact npm version, for example 0.5.1
+        required: true
+        type: string
+      tag:
+        description: npm dist-tag, for example latest or angular-13-16
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+            node-version: ${{ inputs.angular_minimum <= '16' && '16' || inputs.angular_minimum <= '19' && '20' || '22' }}
+          registry-url: https://registry.npmjs.org
+          - run: node scripts/build-library.mjs --angular-min ${{ inputs.angular_minimum }} --angular-max ${{ inputs.angular_maximum }} --version ${{ inputs.version }}
+          - run: npm publish artifacts/angular-${{ inputs.angular_minimum }}-${{ inputs.angular_maximum }}/*.tgz --tag ${{ inputs.tag }} --provenance

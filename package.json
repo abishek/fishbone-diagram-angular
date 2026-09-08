@@ -7,6 +7,7 @@
     "watch:project": "ng build --watch ngx-fishbone-diagram",
     "watch:shell": "ng serve --watch",
     "build": "ng build",
+    "build:library": "node scripts/build-library.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

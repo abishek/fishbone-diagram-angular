@@ -6,7 +6,7 @@ This project builds the library separately from the demo. A library release supp
 
 1. Use a Node version supported by the compiler you are building with. The GitHub workflow selects this automatically; locally, use Node 16 for Angular 13-16, Node 20 for Angular 17-19, and Node 22 for Angular 20-21.
 2. Sign in to [npmjs.com](https://www.npmjs.com/) and make sure you have publish access to `ngx-fishbone-diagram`.
-3. For automated publishing, configure npm trusted publishing for the `abishek/fishbone-diagram-angular` repository and the `publish-library.yml` workflow. The workflow uses OpenID Connect and does not require `npm login` or an `NPM_TOKEN` secret.
+3. For automated publishing, configure npm trusted publishing for the `abishek/fishbone-diagram-angular` repository and the `publish-library.yml` workflow. Allow direct `npm publish` when configuring the trusted publisher. The workflow uses OpenID Connect and does not require `npm login` or an `NPM_TOKEN` secret.
 
 ## Release plan
 
@@ -71,7 +71,7 @@ git push origin main
 1. Push the release commit to GitHub.
 2. Open **Actions**, select **Publish Angular library**, then select **Run workflow**.
 3. Enter `13` as the minimum Angular major, `16` as the maximum, `0.5.1` as the npm version, and `latest` as the tag.
-4. Run the workflow. It builds the tarball in an isolated workspace and publishes it with npm provenance.
+4. Run the workflow. It builds the tarball in an isolated workspace and publishes it with npm provenance, generated automatically by npm trusted publishing.
 
 Do not reuse a version number: npm package versions are immutable. To correct a published package, release a new patch version such as `0.5.2`.
 

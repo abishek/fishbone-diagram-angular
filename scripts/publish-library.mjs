@@ -23,7 +23,7 @@ function run(command, argumentsList, options) {
 function updateReadme(readme, version, angularMinimum, angularMaximum, tag) {
   const start = '<!-- compatibility-releases:start -->';
   const end = '<!-- compatibility-releases:end -->';
-  const row = `| \`${version}\` | ${angularMinimum}-${angularMaximum} | \`${tag}\` | \`npm install ngx-fishbone-diagram@${version}\` |`;
+  const row = `| \`${version}\` | ${angularMinimum}-${angularMaximum} | \`${tag}\` | \`npm install ngx-fishbone-diagram@${tag}\` |`;
   const table = [
     start,
     '| Version | Angular support | npm tag | Install |',
@@ -76,7 +76,7 @@ if (!angularMinimum || !angularMaximum || !version || !tag) {
 
     const npmConfigPath = join(npmConfigDirectory, '.npmrc');
     await writeFile(npmConfigPath, '//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}\n');
-    run('npm', ['publish', join(artifactDirectory, tarball), '--tag', tag, '--provenance'], {
+    run('npm', ['publish', join(artifactDirectory, tarball), '--tag', tag], {
       cwd: repositoryRoot,
       env: { ...process.env, NODE_AUTH_TOKEN: token, NPM_CONFIG_USERCONFIG: npmConfigPath }
     });

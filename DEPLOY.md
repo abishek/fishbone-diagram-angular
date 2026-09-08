@@ -56,7 +56,7 @@ npm run publish:library -- \
   --tag latest
 ```
 
-The script builds the package, publishes it with the supplied tag and provenance, and then adds the release to the compatibility table in [README.md](README.md). Commit and push the README update after a successful publication:
+The script builds the package, publishes it with the supplied tag, and then adds the release to the compatibility table in [README.md](README.md). Local token publishing cannot generate npm provenance because provenance is available only from a supported CI provider such as GitHub Actions. Commit and push the README update after a successful publication:
 
 ```sh
 git add README.md
@@ -64,7 +64,7 @@ git commit -m "Document ngx-fishbone-diagram 0.5.1"
 git push origin main
 ```
 
-`latest` should point to the release you want new consumers to receive. An older maintained compatibility range can use a named tag, such as `angular-13-16`. Use a new patch version for every publication because npm package versions are immutable.
+`latest` should point to the release you want new consumers to receive. A named tag, such as `ng16` or `angular-13-16`, is an independent install selector: `npm install ngx-fishbone-diagram@ng16` resolves to the version published under that tag. Use a new patch version for every publication because npm package versions are immutable.
 
 ## Publish with GitHub Actions
 

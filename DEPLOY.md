@@ -56,7 +56,7 @@ npm run publish:library -- \
   --tag latest
 ```
 
-The script builds the package, publishes it with the supplied tag, and then adds the release to the compatibility table in [README.md](README.md). Local token publishing cannot generate npm provenance because provenance is available only from a supported CI provider such as GitHub Actions. Commit and push the README update after a successful publication:
+The script builds the package and publishes it with the supplied tag. Local token publishing cannot generate npm provenance because provenance is available only from a supported CI provider such as GitHub Actions. Add the new release to the compatibility table in [README.md](README.md), then commit and push the documentation update:
 
 ```sh
 git add README.md

@@ -1,4 +1,4 @@
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -18,29 +18,6 @@ function run(command, argumentsList, options) {
   if (result.status !== 0) {
     throw new Error(`${command} ${argumentsList.join(' ')} failed.`);
   }
-}
-
-function updateReadme(readme, version, angularMinimum, angularMaximum, tag) {
-  const start = '<!-- compatibility-releases:start -->';
-  const end = '<!-- compatibility-releases:end -->';
-  const row = `| \`${version}\` | ${angularMinimum}-${angularMaximum} | \`${tag}\` | \`npm install ngx-fishbone-diagram@${tag}\` |`;
-  const table = [
-    start,
-    '| Version | Angular support | npm tag | Install |',
-    '| --- | --- | --- | --- |',
-    row,
-    end
-  ].join('\n');
-  const pattern = new RegExp(`${start}[\\s\\S]*?${end}`);
-
-  if (pattern.test(readme)) {
-    return readme.replace(pattern, (existing) => {
-      const lines = existing.split('\n');
-      return [...lines.slice(0, 3), row, ...lines.slice(3)].join('\n');
-    });
-  }
-
-  return readme.replace('## Usage', `## Published compatibility releases\n\n${table}\n\n## Usage`);
 }
 
 const angularMinimum = getOption('--angular-min');
@@ -80,10 +57,6 @@ if (!angularMinimum || !angularMaximum || !version || !tag) {
       cwd: repositoryRoot,
       env: { ...process.env, NODE_AUTH_TOKEN: token, NPM_CONFIG_USERCONFIG: npmConfigPath }
     });
-
-    const readmePath = join(repositoryRoot, 'README.md');
-    const readme = await readFile(readmePath, 'utf8');
-    await writeFile(readmePath, updateReadme(readme, version, angularMinimum, angularMaximum, tag));
   } finally {
     await rm(npmConfigDirectory, { recursive: true, force: true });
   }

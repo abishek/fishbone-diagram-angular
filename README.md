@@ -12,10 +12,13 @@ Each release is compiled and packaged in isolation, so the demo application's An
 
 ## Published compatibility releases
 
-<!-- compatibility-releases:start -->
 | Version | Angular support | npm tag | Install |
 | --- | --- | --- | --- |
-<!-- compatibility-releases:end -->
+| `0.5.0` | 13-16 | `ng-13-16` | `npm install ngx-fishbone-diagram@0.5.0` |
+| `0.5.1` | 17-19 | `ng-17-19` | `npm install ngx-fishbone-diagram@0.5.1` |
+| `0.5.2` | 20-21 | `ng-20-21` | `npm install ngx-fishbone-diagram@0.5.2` |
+
+Update this table in the same commit that publishes a new compatibility release. Use the npm dist-tag in the install command when the release should be independently selectable.
 
 ## Usage
 

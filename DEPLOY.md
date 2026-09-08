@@ -45,18 +45,26 @@ npm pack --dry-run artifacts/angular-13-16/*.tgz
 
 ## Publish locally
 
-Use this only when npm trusted publishing is not configured, or for the initial package publication.
+Use this only when npm trusted publishing is not configured, or for the initial package publication. Create an npm granular access token with **Read and write** permission for `ngx-fishbone-diagram`, then store it in your local shell as `NPM_TOKEN`. Do not commit the token or pass it on a command line.
 
 ```sh
-npm login
-npm publish artifacts/angular-13-16/*.tgz --tag latest --provenance
+export NPM_TOKEN="your-npm-granular-automation-token"
+npm run publish:library -- \
+  --angular-min 13 \
+  --angular-max 16 \
+  --version 0.5.1 \
+  --tag latest
 ```
 
-`npm login` is interactive and should never be scripted or committed. `latest` should point to the release you want new consumers to receive. An older maintained compatibility range can use a named tag, such as `angular-13-16`:
+The script builds the package, publishes it with the supplied tag and provenance, and then adds the release to the compatibility table in [README.md](README.md). Commit and push the README update after a successful publication:
 
 ```sh
-npm publish artifacts/angular-13-16/*.tgz --tag angular-13-16 --provenance
+git add README.md
+git commit -m "Document ngx-fishbone-diagram 0.5.1"
+git push origin main
 ```
+
+`latest` should point to the release you want new consumers to receive. An older maintained compatibility range can use a named tag, such as `angular-13-16`. Use a new patch version for every publication because npm package versions are immutable.
 
 ## Publish with GitHub Actions
 
@@ -69,25 +77,50 @@ Do not reuse a version number: npm package versions are immutable. To correct a 
 
 ## Build and deploy the demo site
 
-The demo is maintained on the `angular-16` branch, independently of the library release builds on `main`. GitHub Pages must be configured in the repository's **Settings > Pages** to deploy from the `angular-16` branch and the `/docs` folder.
+The demo source lives on `main` and may use the newest Angular version. The `deploy` branch contains only the generated static site served by GitHub Pages. Keep source code, library releases, and generated Pages output separate.
 
-Build and publish a demo change from a clean working tree:
+### One-time GitHub Pages setup
+
+1. Create and push an empty `deploy` branch:
 
 ```sh
-git fetch origin
-git switch angular-16
-git pull --ff-only origin angular-16
-npm ci
-npm run build
-git add docs
-git commit -m "Deploy demo site"
-git push origin angular-16
+git switch --orphan deploy
+git rm -rf .
+git commit --allow-empty -m "Initialize GitHub Pages deployment branch"
+git push -u origin deploy
 git switch main
 ```
 
-The production build writes the static site to `docs/`. Pushing the resulting `docs` changes to `angular-16` triggers the GitHub Pages deployment at `https://abishek.github.io/fishbone-diagram-angular/`.
+2. In the repository's **Settings > Pages**, select **Deploy from a branch**.
+3. Select the `deploy` branch and the `/(root)` folder, then save.
 
-Do not build the demo on `main`: `main` is the library release branch, while the Pages branch retains the Angular version used by the hosted demo. When the demo is upgraded to a newer Angular major, migrate the Pages branch deliberately and keep its production `outputPath` set to `docs/`.
+Do not create the branch if it already exists. The first deployment command below will populate it.
+
+### Deploy a demo update
+
+Build the demo from `main`, then replace the contents of the `deploy` branch with the production output:
+
+```sh
+git fetch origin
+git switch main
+git pull --ff-only origin main
+npm ci
+npm run build
+git switch deploy
+git pull --ff-only origin deploy
+git rm -rf .
+git checkout main -- docs
+mv docs/* .
+rmdir docs
+git add .
+git commit -m "Deploy demo site"
+git push origin deploy
+git switch main
+```
+
+The production build writes the static site to `docs/`. The commands place its contents at the root of `deploy`, which triggers the GitHub Pages deployment at `https://abishek.github.io/fishbone-diagram-angular/`.
+
+After verifying the `deploy`-branch site, the old `angular-16` branch can be deleted. Its important source changes were Angular 13-to-16 migration history and generated output; it should not be merged wholesale into `main`.
 
 ## Add a future Angular major
 

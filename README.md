@@ -10,6 +10,13 @@ npm install ngx-fishbone-diagram@^0.5.1
 
 Each release is compiled and packaged in isolation, so the demo application's Angular version does not affect published library artifacts. See [DEPLOY.md](DEPLOY.md) for the release and npm publishing process.
 
+## Published compatibility releases
+
+<!-- compatibility-releases:start -->
+| Version | Angular support | npm tag | Install |
+| --- | --- | --- | --- |
+<!-- compatibility-releases:end -->
+
 ## Usage
 
 You can install the package to your app using

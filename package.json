@@ -8,6 +8,7 @@
     "watch:shell": "ng serve --watch",
     "build": "ng build",
     "build:library": "node scripts/build-library.mjs",
+    "publish:library": "node scripts/publish-library.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
